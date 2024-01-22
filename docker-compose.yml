@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: 'Resident_Evil'
+      POSTGRES_USER: 'postgres'
+      POSTGRESS_PASSWORD: '1q2w3e4r5t'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./server/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./server/char.csv:/docker-entrypoint-initdb.d/char.csv
+
+  express-server:
+    build: /server
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+
+  react-client:
+    build: .client
+    ports:
+      - '5173:5175'
+    depends_on:
+      - express-server
