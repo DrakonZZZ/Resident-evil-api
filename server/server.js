@@ -14,7 +14,7 @@ app.get('/api/char', async (req, res) => {
   const client = await db.connect();
 
   try {
-    const result = await client.query('SELECT * FROM public.resident_evil');
+    const result = await client.query('SELECT * FROM resident_evil_characters');
     res.json(result.rows);
   } catch (error) {
     console.error('Error excuting query', error.stack);
