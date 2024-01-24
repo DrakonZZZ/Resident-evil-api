@@ -24,10 +24,16 @@ const cacheMiddleWare = (req, res, next) => {
 };
 
 app.get('/api/char', cacheMiddleWare, async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const pageSize = Number(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
   const client = await db.connect();
 
   try {
-    const result = await client.query('SELECT * FROM resident_evil_characters');
+    const result = await client.query(
+      'SELECT * FROM resident_evil_characters OFFSET $1 LIMIT $2',
+      [offset, pageSize]
+    );
     const characters = result.rows;
 
     cache[req.originalUrl] = characters;
