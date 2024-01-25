@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import CharDetails from './components/charDetails';
+import CharDetails from './components/CharDetails';
+import CharCard from './components/CharCard';
 
 function App() {
   const [list, setList] = useState([]);
@@ -33,20 +34,7 @@ function App() {
     <>
       <main>
         <h2>RESIDENT EVIL CHARACTER</h2>
-        <div className="card-container">
-          {list.map((item) => {
-            return (
-              <div
-                key={item.id}
-                className="card-item"
-                onClick={() => handleSelect(item.id)}
-              >
-                <h3>{item.name}</h3>
-                <p>{item.first_appearance}</p>
-              </div>
-            );
-          })}
-        </div>
+        <CharCard list={list} handleSelect={handleSelect} />
         {selectChar && <CharDetails selectChar={selectChar} />}
       </main>
     </>
