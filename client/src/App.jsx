@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import CharDetails from './components/charDetails';
 
 function App() {
   const [list, setList] = useState([]);
@@ -30,25 +31,23 @@ function App() {
   }, []);
   return (
     <>
-      <main className="card-container">
-        {list.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="card-item"
-              onClick={() => handleSelect(item.id)}
-            >
-              <h3>{item.name}</h3>
-              <p>{item.first_appearance}</p>
-            </div>
-          );
-        })}
-        {selectChar && (
-          <div className="selected-char-container">
-            <h2>{selectChar.name}</h2>
-            <p>{selectChar.skills}</p>
-          </div>
-        )}
+      <main>
+        <h2>RESIDENT EVIL CHARACTER</h2>
+        <div className="card-container">
+          {list.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className="card-item"
+                onClick={() => handleSelect(item.id)}
+              >
+                <h3>{item.name}</h3>
+                <p>{item.first_appearance}</p>
+              </div>
+            );
+          })}
+        </div>
+        {selectChar && <CharDetails selectChar={selectChar} />}
       </main>
     </>
   );

@@ -17,13 +17,27 @@
   border: 2px solid rgb(255, 62, 62);
   border-radius: 5px;
   cursor: pointer;
-  h3 {
-    background-color: rgb(255, 62, 62);
-    color: rgb(252, 252, 252);
-    margin: 0;
-    padding: 0.4rem;
-  }
-  p {
-    padding: 2rem;
-  }
+}
+
+.card-item > h3 {
+  background-color: rgb(255, 62, 62);
+  color: rgb(252, 252, 252);
+  margin: 0;
+  padding: 0.4rem;
+}
+
+.card-item > p {
+  padding: 1rem 2rem;
+}
+
+.selected-char-container {
+  margin-top: 2rem;
+  border: 2px solid rgb(255, 62, 62);
+  width: 60%;
+  border-radius: 5px;
+}
+
+.selected-char-container h2 {
+  background-color: rgb(255, 62, 62);
+  margin: 0;
 }
