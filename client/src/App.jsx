@@ -17,23 +17,42 @@ function App() {
     }
   };
 
+  const handleInput = async (e) => {
+    const inputValue = e.target.value.toLowerCase();
+    if (inputValue === '') {
+      fetchData();
+    } else {
+      const filteredList = list.filter((item) => {
+        return item.name.toLowerCase().includes(inputValue);
+      });
+      setList(filteredList);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const result = await fetch('http://localhost:3000/api/char/all');
+      const parsedJson = await result.json();
+      setList(parsedJson);
+    } catch (error) {
+      console.error("Couldn't fetch data");
+    }
+  };
+
   console.log(list);
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetch('http://localhost:3000/api/char');
-        const parsedJson = await result.json();
-        setList(parsedJson);
-      } catch (error) {
-        console.error("Couldn't fetch data");
-      }
-    };
     fetchData();
   }, []);
   return (
     <>
       <main>
         <h2>RESIDENT EVIL CHARACTER</h2>
+        <input
+          type="text"
+          id="name"
+          placeholder="search for a character"
+          onChange={handleInput}
+        />
         <CharCard list={list} handleSelect={handleSelect} />
         {selectChar && <CharDetails selectChar={selectChar} />}
       </main>
