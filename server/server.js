@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import db from './lib/db.js';
-import errorHandler from './lib/middleWare.js';
+import errorHandler from './lib/errorMiddleware.js';
 
 const app = express();
 const port = 3000;
@@ -36,6 +36,22 @@ app.get('/api/char/all', async (req, res) => {
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     client.release();
+  }
+});
+
+app.get('/api/char/search', async (req, res) => {
+  try {
+    const { name } = req.query;
+    const client = await db.connect();
+    const searchResults = await client.query(
+      'SELECT * FROM resident_evil_characters WHERE name ILIKE $1',
+      [`%${name}%`]
+    );
+    const characters = searchResults.rows;
+    res.json(characters);
+  } catch (error) {
+    console.error('Error searching characters:', error.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
