@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import db from './lib/db.js';
+import errorHandler from './lib/middleWare.js';
 
 const app = express();
 const port = 3000;
@@ -9,6 +10,7 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(errorHandler);
 
 const cache = {};
 
@@ -23,23 +25,14 @@ const cacheMiddleWare = (req, res, next) => {
   }
 };
 
-app.get('/api/char', cacheMiddleWare, async (req, res) => {
-  const page = Number(req.query.page) || 1;
-  const pageSize = Number(req.query.pageSize) || 10;
-  const offset = (page - 1) * pageSize;
+app.get('/api/char/all', async (req, res) => {
   const client = await db.connect();
-
   try {
-    const result = await client.query(
-      'SELECT * FROM resident_evil_characters OFFSET $1 LIMIT $2',
-      [offset, pageSize]
-    );
+    const result = await client.query('SELECT * FROM resident_evil_characters');
     const characters = result.rows;
-
-    cache[req.originalUrl] = characters;
     res.json(characters);
   } catch (error) {
-    console.error('Error excuting query', error.stack);
+    console.error('Error executing query', error.stack);
     res.status(500).json({ error: 'Something went wrong' });
   } finally {
     client.release();
@@ -60,6 +53,29 @@ app.get('/api/char/:id', async (req, res) => {
     } else {
       res.json(result.rows[0]);
     }
+  } catch (error) {
+    console.error('Error excuting query', error.stack);
+    res.status(500).json({ error: 'Something went wrong' });
+  } finally {
+    client.release();
+  }
+});
+
+app.get('/api/char', cacheMiddleWare, async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const pageSize = Number(req.query.pageSize) || 10;
+  const offset = (page - 1) * pageSize;
+  const client = await db.connect();
+
+  try {
+    const result = await client.query(
+      'SELECT * FROM resident_evil_characters OFFSET $1 LIMIT $2',
+      [offset, pageSize]
+    );
+    const characters = result.rows;
+
+    cache[req.originalUrl] = characters;
+    res.json(characters);
   } catch (error) {
     console.error('Error excuting query', error.stack);
     res.status(500).json({ error: 'Something went wrong' });
