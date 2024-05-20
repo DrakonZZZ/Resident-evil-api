@@ -41,6 +41,7 @@ Access the web API at `http://localhost:3000`. The PostgreSQL database is expose
 ## Endpoints
 
 - `GET api/char`: Retrieve first 10 characters in the database and use search query to get details about specific character
+- - `GET api/{characterName}r`: Retrieve specific characters in the database and use search query to get details about specific character
 
 
 ## Contributing
